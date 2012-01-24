@@ -6,4 +6,8 @@
 
 ; from REPL
 (-main "Frogstar World A" "Frogstar B" "Frogstar World C")
-  
+
+(if true :truthy :falsey)
+(if [] :truthy :falsey)
+(if nil :truthy :falsey)
+(if false :truthy :falsey)
