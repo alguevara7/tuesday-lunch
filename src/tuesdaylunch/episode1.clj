@@ -1,5 +1,6 @@
 (ns tuesdaylunch.episode1
-  (:use [clojure.string :only [join]]))
+  (:use [clojure.string :only [join]])
+  (:import [java.util ArrayList]))
  
 (defn -main [& args]
   (println (str "hello worlds: " (join ", " args))))
@@ -30,3 +31,10 @@
 ;list
 (def a-list '(42 43 44))
 (def another-list (map str [1 2 3 4 5]))
+
+(defn interoperate-with-java [var-name]
+  (do
+    (println (System/getenv var-name))
+    (let [list (ArrayList.)]
+      (.addAll list [1 2 3])
+      (println (join ", " list)))))
