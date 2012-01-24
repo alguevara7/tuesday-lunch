@@ -1,40 +1,44 @@
 (ns tuesdaylunch.episode1
-  (:use [clojure.string :only [join]])
-  (:import [java.util ArrayList]))
+  (:use [clojure.contrib.generic.functor])
+  (:import [java.util Calendar]))
  
-(defn -main [& args]
-  (println (str "hello worlds: " (join ", " args))))
+(defn date [year month day]
+  (let [calendar (Calendar/getInstance)]
+    (do
+      (.set calendar (Calendar/YEAR) year)
+      (.set calendar (Calendar/MONTH) month)
+      (.set calendar (Calendar/DAY_OF_MONTH) day)
+      (.set calendar (Calendar/HOUR_OF_DAY) 0)
+      (.set calendar (Calendar/MINUTE) 0)
+      (.set calendar (Calendar/SECOND) 0)
+      (.set calendar (Calendar/MILLISECOND) 0)
+      (.getTime calendar))))
 
-;from REPL
-(use 'tuesdaylunch.episode1)
+(defn- date-lazy-seq [start]
+  (let [calendar (Calendar/getInstance)]
+    (.setTime calendar start)
+    (lazy-seq (cons (.getTime  calendar) (date-lazy-seq (do (.add calendar (Calendar/DAY_OF_MONTH) 1) (.getTime calendar)))))))
 
-(-main "Frogstar World A" "Frogstar B" "Frogstar World C")
-
-(if true :truthy :falsey)
-(if [] :truthy :falsey)
-(if nil :truthy :falsey)
-(if false :truthy :falsey)
+(defn date-range [start end]
+    (vec (take-while (fn [date] (<= (.getTime date) (.getTime end))) (date-lazy-seq start))))
 
 
-;set
-(def a-set #{:bright :copper :kettles})
-;(def not-a-set #{:bright :copper :kettles :bright})
+(def stories [{:name "story 1" :size 5 :completion-date (date 2012 1 1)}
+              {:name "story 2" :size 2 :completion-date (date 2012 1 2)}
+              {:name "story 3" :size 1 :completion-date (date 2012 1 5)}
+              {:name "story 4" :size 1 :completion-date (date 2012 1 5)}
+              {:name "story 5" :size 3 :completion-date (date 2012 1 6)}])
 
-;map
-(def a-map {:species "monkey" :emotion "angry"})
-(def another-map {"A" 23 "B" 83})
+(defn generate-burn-up-chart-data-points [start-date end-date stories]
+  (let [date-to-points-done (fmap
+                             (fn
+                               [stories-completed-on-same-day]
+                               (reduce + 0 (map #(:size %) stories-completed-on-same-day)))
+                             (group-by (fn [story] (:completion-date story)) stories))]
+    (into [] (for [date (date-range start-date end-date)]
+               (reduce
+                (fn [sum d] (+ sum (if-let [points (get date-to-points-done d)] points 0)))
+                0
+                (date-range start-date date))))))
 
-;vector
-(def a-vector [1 2 3 4 5])
-(def another-vector ["A" "B" "C"])
-
-;list
-(def a-list '(42 43 44))
-(def another-list (map str [1 2 3 4 5]))
-
-(defn interoperate-with-java [var-name]
-  (do
-    (println (System/getenv var-name))
-    (let [list (ArrayList.)]
-      (.addAll list [1 2 3])
-      (println (join ", " list)))))
+(generate-burn-up-chart-data-points (date 2012 1 1) (date 2012 1 6) stories)
