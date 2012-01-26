@@ -1,4 +1,4 @@
-(ns tuesdaylunch.episode1
+(ns tuesdaylunch.episode1.slide10and11
   (:use [clojure.contrib.generic.functor])
   (:import [java.util Calendar]))
  
