@@ -28,18 +28,19 @@
               {:name "story 4" :size 1 :completion-date (date 2012 1 5)}
               {:name "story 5" :size 3 :completion-date (date 2012 1 6)}])
 
-; Number of points completed for 'story' at 'date'
+; number of points completed for 'story' by 'date'
 (defn points-completed-by [date story]
   (if (<= (.getTime (:completion-date story)) (.getTime date))
-    (:size story) 0))
+    (:size story)
+    0))
 
-; Total number of points accumulated at 'date' for all stories combined
+; total number of points accumulated at 'date' for all stories combined
 (defn accumulated-points [date stories]
-  (reduce + 0 (map #(points-completed-by date %) stories)))
+  (apply + (map (fn [story] (points-completed-by date story)) stories)))
 
 (defn generate-burn-up-chart-data-points [start-date end-date stories]
   (let [dates (date-range start-date end-date)]
-    (map #(accumulated-points % stories) dates)))
+    (map (fn [date] (accumulated-points date stories)) dates)))
 
 ;from REPL
 ; (generate-burn-up-chart-data-points (date 2012 1 1) (date 2012 1 6) stories)
