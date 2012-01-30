@@ -1,5 +1,4 @@
-(ns tuesdaylunch.episode1
-  (:use [clojure.contrib.generic.functor])
+(ns tuesdaylunch.episode1.slide10and11
   (:import [java.util Calendar]))
  
 (defn date [year month day]
@@ -29,17 +28,18 @@
               {:name "story 4" :size 1 :completion-date (date 2012 1 5)}
               {:name "story 5" :size 3 :completion-date (date 2012 1 6)}])
 
+; Number of points completed for 'story' at 'date'
+(defn points-completed-by [date story]
+  (if (<= (.getTime (:completion-date story)) (.getTime date))
+    (:size story) 0))
+
+; Total number of points accumulated at 'date' for all stories combined
+(defn accumulated-points [date stories]
+  (reduce + 0 (map #(points-completed-by date %) stories)))
+
 (defn generate-burn-up-chart-data-points [start-date end-date stories]
-  (let [date-to-points-done (fmap
-                             (fn
-                               [stories-completed-on-same-day]
-                               (reduce + 0 (map #(:size %) stories-completed-on-same-day)))
-                             (group-by (fn [story] (:completion-date story)) stories))]
-    (into [] (for [date (date-range start-date end-date)]
-               (reduce
-                (fn [sum d] (+ sum (if-let [points (get date-to-points-done d)] points 0)))
-                0
-                (date-range start-date date))))))
+  (let [dates (date-range start-date end-date)]
+    (map #(accumulated-points % stories) dates)))
 
 ;from REPL
-(generate-burn-up-chart-data-points (date 2012 1 1) (date 2012 1 6) stories)
+; (generate-burn-up-chart-data-points (date 2012 1 1) (date 2012 1 6) stories)
