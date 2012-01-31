@@ -42,5 +42,6 @@
   (let [dates (date-range start-date end-date)]
     (map (fn [date] (accumulated-points date stories)) dates)))
 
-;from REPL
+; from REPL
+; (use 'tuesdaylunch.episode1.slide10and11)
 ; (generate-burn-up-chart-data-points (date 2012 1 1) (date 2012 1 6) stories)

@@ -5,6 +5,7 @@
   (println (str "hello worlds: " (join ", " args))))
 
 ; from REPL
-(use 'tuesdaylunch.episode1.slide5)
-(-main "Frogstar World A" "Frogstar B" "Frogstar World C")
+; (use 'tuesdaylunch.episode1.slide5)
+; (-main "Frogstar World A" "Frogstar B" "Frogstar World C")
+
 
