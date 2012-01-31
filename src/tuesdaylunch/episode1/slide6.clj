@@ -1,17 +1,11 @@
-;from REPL
+(ns tuesdaylunch.episode1.slide5
+  (:use [clojure.string :only [join]]))
  
-;set
-(def a-set #{:bright :copper :kettles})
-;(def not-a-set #{:bright :copper :kettles :bright})
+(defn -main [& args]
+  (println (str "hello worlds: " (join ", " args))))
 
-;map
-(def a-map {:species "monkey" :emotion "angry"})
-(def another-map {"A" 23 "B" 83})
+; from REPL
+; (use 'tuesdaylunch.episode1.slide5)
+; (-main "Frogstar World A" "Frogstar B" "Frogstar World C")
 
-;vector
-(def a-vector [1 2 3 4 5])
-(def another-vector ["A" "B" "C"])
 
-;list
-(def a-list '(42 43 44))
-(def another-list (map str [1 2 3 4 5]))
