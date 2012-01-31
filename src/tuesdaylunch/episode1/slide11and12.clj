@@ -1,4 +1,4 @@
-(ns tuesdaylunch.episode1.slide10and11
+(ns tuesdaylunch.episode1.slide11and12
   (:import [java.util Calendar]))
  
 (defn date [year month day]
@@ -43,5 +43,5 @@
     (map (fn [date] (accumulated-points date stories)) dates)))
 
 ; from REPL
-; (use 'tuesdaylunch.episode1.slide10and11)
+; (use 'tuesdaylunch.episode1.slide11and12)
 ; (generate-burn-up-chart-data-points (date 2012 1 1) (date 2012 1 6) stories)
